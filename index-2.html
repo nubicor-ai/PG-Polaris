@@ -1,0 +1,720 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PG Polaris by nubicor.ai</title>
+<meta name="description" content="Confused about your PG branch? Answer 14 quick questions about your personality, lifestyle and interests and find your best match among 19 branches.">
+<meta name="theme-color" content="#21143a">
+<meta property="og:title" content="PG Polaris by nubicor.ai">
+<meta property="og:description" content="Find your north star among 19 PG branches.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 110'%3E%3Crect width='160' height='110' rx='24' fill='%231e1033'/%3E%3Cpath d='M45 85 C20 85 15 55 40 50 C42 28 75 20 88 40 C108 30 130 45 122 65 C140 68 138 85 118 85 Z' fill='none' stroke='%23c9b6f2' stroke-width='6' stroke-linejoin='round'/%3E%3Cpath d='M62 62 H72 L78 48 L86 74 L92 62 H102' fill='none' stroke='%23f6b09e' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<style>
+  :root{
+    --ink:#f6f1fc; --muted:#bdb1dc; --soft:#8d81b0; --peach:#f6b09e; --lilac:#c0b2eb;
+    --line:rgba(230,220,255,.16); --bg0:#2e1d4d; --bg1:#21143a; --bg2:#150c28;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  [hidden]{display:none!important}
+  html{scroll-behavior:smooth}
+  body{
+    min-height:100vh; color:var(--ink); overflow-x:hidden; position:relative; line-height:1.5;
+    font-family:"Poppins","Segoe UI",system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+    background:linear-gradient(165deg,var(--bg0) 0%,var(--bg1) 50%,var(--bg2) 100%) fixed;
+    -webkit-font-smoothing:antialiased;
+  }
+  button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+  button:focus-visible,summary:focus-visible{outline:2px solid var(--peach);outline-offset:3px}
+
+  .orb{position:fixed;border-radius:50%;filter:blur(80px);pointer-events:none;z-index:0}
+  .o1{width:46vmax;height:46vmax;left:-14vmax;top:-14vmax;background:#7d5bc4;opacity:.30;animation:d1 20s ease-in-out infinite}
+  .o2{width:34vmax;height:34vmax;right:-12vmax;top:10vmax;background:#f6b09e;opacity:.10;animation:d2 24s ease-in-out infinite}
+  .o3{width:44vmax;height:44vmax;right:-16vmax;bottom:-18vmax;background:#6d47b8;opacity:.26;animation:d1 26s ease-in-out infinite reverse}
+  @keyframes d1{0%,100%{transform:translate(0,0)}50%{transform:translate(3vmax,2vmax)}}
+  @keyframes d2{0%,100%{transform:translate(0,0)}50%{transform:translate(-3vmax,3vmax)}}
+  .stars{position:fixed;inset:0;z-index:0;pointer-events:none}
+  .stars i{position:absolute;width:3px;height:3px;border-radius:50%;background:#f4eeff;opacity:.5;animation:tw 4s ease-in-out infinite}
+  .stars i:nth-child(1){left:8%;top:12%;animation-delay:.2s}.stars i:nth-child(2){left:24%;top:7%;width:2px;height:2px;animation-delay:1.1s}
+  .stars i:nth-child(3){left:41%;top:20%;animation-delay:2.2s}.stars i:nth-child(4){left:66%;top:8%;width:2px;height:2px;animation-delay:.7s}
+  .stars i:nth-child(5){left:86%;top:17%;animation-delay:1.6s}.stars i:nth-child(6){left:93%;top:44%;width:2px;height:2px;animation-delay:2.8s}
+  .stars i:nth-child(7){left:5%;top:52%;width:2px;height:2px;animation-delay:3.2s}.stars i:nth-child(8){left:13%;top:78%;animation-delay:1.9s}
+  .stars i:nth-child(9){left:79%;top:74%;animation-delay:.4s}.stars i:nth-child(10){left:91%;top:90%;width:2px;height:2px;animation-delay:2.5s}
+  @keyframes tw{0%,100%{opacity:.15}50%{opacity:.8}}
+
+  .top{position:relative;z-index:2;max-width:760px;margin:0 auto;padding:22px 22px 0;display:flex;justify-content:center}
+  .brand{display:flex;align-items:center;gap:14px}
+  .brand svg{width:64px;height:auto;filter:drop-shadow(0 0 14px rgba(176,140,242,.5))}
+  .brand b{display:block;font-size:1.15rem;letter-spacing:.04em;line-height:1.15}
+  .brand small{display:block;font-size:.8rem;letter-spacing:.14em;color:var(--peach);margin-top:2px}
+
+  main{position:relative;z-index:2;max-width:760px;margin:0 auto;padding:6px 22px 40px}
+  .screen{display:none}
+  .screen.active{display:block;animation:rise .55s ease both}
+  @keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+
+  .grad{background:linear-gradient(90deg,#d9c9ff,#f6b09e);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .eyebrow{font-size:.76rem;font-weight:600;letter-spacing:.34em;text-transform:uppercase;color:var(--peach)}
+
+  /* intro */
+  .hero{text-align:center;padding-top:10px}
+  .polaris{width:min(56vw,230px);height:auto;margin:0 auto;display:block;overflow:visible}
+  .polaris .orbit{transform-origin:100px 100px;animation:spin 40s linear infinite}
+  .polaris .glow{animation:pulse 4s ease-in-out infinite;transform-origin:100px 100px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes pulse{0%,100%{opacity:.55;transform:scale(1)}50%{opacity:1;transform:scale(1.08)}}
+  h1.title{margin-top:6px;font-size:clamp(2.7rem,12vw,4.6rem);font-weight:700;letter-spacing:.02em;line-height:1.05}
+  .tagline{margin-top:12px;font-size:clamp(1.05rem,4vw,1.35rem);font-weight:500;color:var(--lilac)}
+  .lede{margin:22px auto 0;max-width:560px;color:var(--muted);font-size:1rem}
+  .facts{list-style:none;margin:30px 0 0;display:flex;justify-content:center;gap:clamp(18px,6vw,44px)}
+  .facts li{font-size:.8rem;letter-spacing:.06em;color:var(--muted);text-align:center;line-height:1.3}
+  .facts b{display:block;font-size:1.9rem;color:var(--ink);font-weight:700;letter-spacing:0}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:15px 30px;border-radius:999px;font-weight:600;letter-spacing:.02em;transition:transform .2s,box-shadow .2s,background .2s,opacity .2s}
+  .btn.primary{background:linear-gradient(90deg,#c9b6f2,#f6b09e);color:#2a1745;box-shadow:0 10px 32px rgba(246,176,158,.25)}
+  .btn.primary:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 14px 38px rgba(246,176,158,.38)}
+  .btn.primary:disabled{opacity:.4;cursor:not-allowed;box-shadow:none}
+  .btn.ghost{border:1.5px solid rgba(230,220,255,.35);color:#e9defe;background:rgba(255,255,255,.05)}
+  .btn.ghost:hover{background:rgba(255,255,255,.12);transform:translateY(-2px)}
+  .start{margin-top:34px}
+  .cloud{margin:44px auto 0;max-width:640px;display:flex;flex-wrap:wrap;justify-content:center;gap:8px 16px;font-size:.82rem;color:var(--soft)}
+  .cloud span{opacity:.9}
+  .cloud span.hl{color:var(--peach);font-weight:600}
+
+  /* quiz */
+  .prog{display:flex;align-items:center;gap:14px;margin-top:10px}
+  .bar{flex:1;height:6px;border-radius:6px;background:rgba(255,255,255,.1);overflow:hidden}
+  .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#c9b6f2,#f6b09e);border-radius:6px;transition:width .5s ease}
+  #progTxt{font-size:.78rem;letter-spacing:.14em;color:var(--muted);white-space:nowrap}
+  #stepTitle{margin-top:26px;font-size:clamp(1.8rem,7vw,2.6rem);line-height:1.15;font-weight:700}
+  #stepSub{margin-top:8px;color:var(--muted)}
+  #qlist{margin-top:10px}
+  .q{padding:26px 0;border-bottom:1px solid var(--line)}
+  .q:last-child{border-bottom:0}
+  .qtext{font-size:clamp(1.05rem,3.9vw,1.25rem);font-weight:600;line-height:1.4}
+  .scale{margin-top:16px;display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+  .scale button{height:52px;border-radius:14px;border:1.5px solid rgba(230,220,255,.28);font-weight:600;font-size:1.05rem;color:var(--lilac);transition:all .18s}
+  .scale button:hover{border-color:var(--peach);color:#fff}
+  .scale button[aria-checked="true"]{background:linear-gradient(135deg,#f9c8ba,#f4a48e);color:#2a1745;border-color:transparent;transform:translateY(-2px);box-shadow:0 8px 22px rgba(246,176,158,.28)}
+  .ends{display:flex;justify-content:space-between;gap:12px;margin-top:9px;font-size:.78rem;color:var(--soft)}
+  .chipsBlock{padding:26px 0 6px;border-top:1px solid var(--line)}
+  .chipsBlock h3{font-size:clamp(1.05rem,3.9vw,1.25rem)}
+  .chipsBlock h3 small{font-weight:400;color:var(--soft);font-size:.8rem;margin-left:8px}
+  .chips{margin-top:16px;display:flex;flex-wrap:wrap;gap:10px}
+  .chips button{padding:10px 16px;border-radius:999px;border:1.5px solid rgba(230,220,255,.28);font-size:.9rem;color:var(--lilac);transition:all .18s}
+  .chips button:hover{border-color:var(--peach);color:#fff}
+  .chips button[aria-pressed="true"]{background:linear-gradient(135deg,#f9c8ba,#f4a48e);color:#2a1745;border-color:transparent;font-weight:600}
+  .nav{margin-top:26px;display:flex;justify-content:space-between;gap:12px}
+  .hint{margin-top:12px;text-align:center;font-size:.82rem;color:var(--soft);min-height:1.3em}
+
+  /* results */
+  .arch{text-align:center;padding-top:6px}
+  .arch h2{margin-top:10px;font-size:clamp(2rem,8.5vw,3rem);line-height:1.1;font-weight:700}
+  .arch p{margin:10px auto 0;max-width:480px;color:var(--muted)}
+  .top1{margin-top:34px;padding-top:30px;border-top:1px solid var(--line)}
+  .top1 .head{display:flex;align-items:center;gap:20px}
+  .ring{position:relative;width:118px;height:118px;flex:none}
+  .ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+  .ring circle{fill:none;stroke-width:9;stroke-linecap:round}
+  .ring .bg{stroke:rgba(255,255,255,.1)}
+  .ring .fg{stroke:url(#ringGrad);stroke-dasharray:314;stroke-dashoffset:314;transition:stroke-dashoffset 1.2s cubic-bezier(.2,.8,.2,1)}
+  .ring b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:1.65rem;font-weight:700}
+  .top1 h3{font-size:clamp(1.6rem,6.4vw,2.2rem);line-height:1.12;font-weight:700}
+  .vibe{margin-top:4px;color:var(--peach);font-weight:500}
+  .sec{margin-top:24px}
+  .sec h4{font-size:.74rem;letter-spacing:.3em;text-transform:uppercase;color:var(--peach);font-weight:600;margin-bottom:10px}
+  .sec ul{list-style:none}
+  .sec li{position:relative;padding-left:22px;margin:8px 0;color:var(--ink)}
+  .sec li::before{content:"";position:absolute;left:2px;top:.62em;width:8px;height:8px;border-radius:50%;background:var(--lilac)}
+  .sec.watch li::before{background:var(--peach)}
+  .sec p{color:var(--muted)}
+  .runners{margin-top:34px;padding-top:6px}
+  .runner{padding:22px 0;border-top:1px solid var(--line)}
+  .runner .rh{display:flex;align-items:baseline;justify-content:space-between;gap:14px}
+  .runner h3{font-size:1.3rem;font-weight:700}
+  .runner .pc{font-size:1.5rem;font-weight:700;color:var(--lilac)}
+  .runner .vibe{margin-top:2px}
+  .all{margin-top:34px}
+  .all>h4{font-size:.74rem;letter-spacing:.3em;text-transform:uppercase;color:var(--peach);font-weight:600}
+  .all>p{margin-top:6px;color:var(--soft);font-size:.85rem}
+  .all details{border-top:1px solid var(--line)}
+  .all details:last-child{border-bottom:1px solid var(--line)}
+  .all summary{list-style:none;cursor:pointer;padding:14px 0;display:grid;grid-template-columns:28px 1fr auto;column-gap:10px;row-gap:7px;align-items:center}
+  .all summary::-webkit-details-marker{display:none}
+  .all .rk{color:var(--soft);font-size:.85rem}
+  .all .nm{font-weight:600}
+  .all .pc2{font-weight:700;color:var(--lilac)}
+  .all .mini{grid-column:2 / 4;height:5px;border-radius:5px;background:rgba(255,255,255,.08);overflow:hidden}
+  .all .mini i{display:block;height:100%;border-radius:5px;background:linear-gradient(90deg,#c9b6f2,#f6b09e);width:0;transition:width .9s ease}
+  .all .detail{padding:2px 0 22px 38px}
+  .actions{margin-top:38px;display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+  .note{margin:26px auto 0;max-width:560px;text-align:center;color:var(--soft);font-size:.8rem}
+  footer{position:relative;z-index:2;max-width:760px;margin:0 auto;padding:10px 22px 44px;text-align:center;color:var(--soft);font-size:.74rem;line-height:1.6}
+  footer b{color:var(--muted);letter-spacing:.12em}
+  .toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,30px);opacity:0;background:#2a1745;border:1px solid var(--line);color:var(--ink);padding:12px 20px;border-radius:999px;font-size:.88rem;z-index:20;transition:all .3s;pointer-events:none}
+  .toast.show{opacity:1;transform:translate(-50%,0)}
+  @media (max-width:420px){.top1 .head{gap:14px}.ring{width:96px;height:96px}.ring b{font-size:1.35rem}.scale{gap:7px}}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#c9b6f2"/><stop offset="100%" stop-color="#f6b09e"/></linearGradient>
+    <symbol id="nubiLogo" viewBox="0 0 160 110">
+      <path d="M45 85 C20 85 15 55 40 50 C42 28 75 20 88 40 C108 30 130 45 122 65 C140 68 138 85 118 85 Z" fill="rgba(230,220,255,.10)" stroke="#c9b6f2" stroke-width="5" stroke-linejoin="round"/>
+      <path d="M62 62 H72 L78 48 L86 74 L92 62 H102" fill="none" stroke="#f6b09e" stroke-width="4.4" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M118 22 A22 22 0 0 1 140 44" fill="none" stroke="#e6dcff" stroke-width="3.4" stroke-linecap="round"/>
+      <path d="M118 10 A34 34 0 0 1 152 44" fill="none" stroke="#e6dcff" stroke-width="3.4" stroke-linecap="round" opacity=".55"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div>
+<div class="stars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+
+<header class="top">
+  <div class="brand">
+    <svg viewBox="0 0 160 110" role="img" aria-label="nubicor.ai logo"><use href="#nubiLogo"/></svg>
+    <div><b>PG Polaris</b><small>by nubicor.ai</small></div>
+  </div>
+</header>
+
+<main>
+  <!-- INTRO -->
+  <section class="screen active hero" id="intro">
+    <svg class="polaris" viewBox="0 0 200 200" aria-hidden="true">
+      <defs>
+        <radialGradient id="sg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#f6b09e" stop-opacity=".75"/><stop offset="100%" stop-color="#f6b09e" stop-opacity="0"/></radialGradient>
+        <linearGradient id="starG" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#fff1ee"/><stop offset="100%" stop-color="#f6b09e"/></linearGradient>
+      </defs>
+      <circle class="glow" cx="100" cy="100" r="76" fill="url(#sg)"/>
+      <g class="orbit" fill="none" stroke="#c9b6f2" stroke-opacity=".35">
+        <circle cx="100" cy="100" r="92" stroke-dasharray="2 7"/>
+        <circle cx="100" cy="100" r="64" stroke-opacity=".25"/>
+        <circle cx="100" cy="8" r="4" fill="#c9b6f2" stroke="none"/>
+        <circle cx="36" cy="132" r="3" fill="#f6b09e" stroke="none"/>
+      </g>
+      <path d="M100 32 L108 92 L168 100 L108 108 L100 168 L92 108 L32 100 L92 92 Z" fill="url(#starG)"/>
+    </svg>
+    <p class="eyebrow" style="margin-top:14px">for doctors choosing a PG branch</p>
+    <h1 class="title">PG <span class="grad">Polaris</span></h1>
+    <p class="tagline">Find your north star among 19 PG branches.</p>
+    <p class="lede">Tell us who you are, how you want to live and what pulls you. We'll match you with the branches that fit best, including Emergency Medicine, Respiratory Medicine and Radiation Oncology.</p>
+    <ul class="facts">
+      <li><b>14</b>quick questions</li>
+      <li><b>2</b>minutes</li>
+      <li><b>0</b>data saved</li>
+    </ul>
+    <button class="btn primary start" id="startBtn">Find my branch</button>
+    <div class="cloud" id="cloud" aria-label="The 19 branches covered"></div>
+  </section>
+
+  <!-- QUIZ -->
+  <section class="screen" id="quiz">
+    <div class="prog"><div class="bar"><i id="progBar"></i></div><span id="progTxt"></span></div>
+    <h2 id="stepTitle"></h2>
+    <p id="stepSub"></p>
+    <div id="qlist"></div>
+    <div class="chipsBlock" id="chipsBlock" hidden>
+      <h3>Anything that pulls you in? <small>Pick any, or none</small></h3>
+      <div class="chips" id="chips"></div>
+    </div>
+    <div class="nav">
+      <button class="btn ghost" id="backBtn">Back</button>
+      <button class="btn primary" id="nextBtn">Next</button>
+    </div>
+    <p class="hint" id="hint"></p>
+  </section>
+
+  <!-- RESULTS -->
+  <section class="screen" id="results"></section>
+</main>
+
+<footer>
+  <b>PG POLARIS</b> by nubicor.ai<br>
+  A reflection tool, not official counselling. Branch profiles are broad generalisations and real life varies by hospital and city. Talk to seniors in the branches you like before you decide. Your answers stay on your device.
+</footer>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ---------- DATA ---------- */
+  var DIMS = ['pace','hands','people','visual','continuity','empathy','hours','earning','solo','physical','emotional','research','tech','public'];
+  var TYPE = {pace:'sym',hands:'sym',people:'sym',visual:'sym',continuity:'sym',empathy:'sym',solo:'sym',tech:'sym',public:'sym',
+              hours:'need',earning:'need',research:'need',physical:'tol',emotional:'tol'};
+
+  // v order: pace, hands, people, visual, continuity, empathy, hours, earning, solo, physical, emotional, research, tech, public
+  var BRANCHES = [
+    {id:'med',name:'General Medicine',tag:'The diagnostic detective.',
+     day:'Ward rounds, OPD, ICU calls and complex multi-system patients, with a lot of reasoning and long follow-ups.',
+     real:'A broad base that opens doors to many super-specialities. Ward workload can be heavy.',v:[3,2,5,2,5,4,3,3,2,3,4,4,3,3]},
+    {id:'paeds',name:'Paediatrics',tag:'Care for the smallest patients and their families.',
+     day:'Newborn and child wards, vaccinations, growth and development, and many conversations with anxious parents.',
+     real:'Rewarding, but emotionally heavy when a child is critically ill. Parents are part of every consultation.',v:[3,2,5,2,4,5,3,3,2,3,4,3,2,4]},
+    {id:'obg',name:'Obstetrics & Gynaecology',tag:'Two lives, one team.',
+     day:'Labour room, OT lists for C-sections and gynaecological surgery, antenatal clinics and frequent emergencies.',
+     real:'Unpredictable hours and medico-legal pressure are common, and the work is always in demand.',v:[4,5,5,2,3,4,1,4,2,5,4,2,2,4]},
+    {id:'surg',name:'General Surgery',tag:'Fix it with your hands.',
+     day:'OPD, ward rounds, emergency calls and OT lists covering a wide range of operations.',
+     real:'Long training, long hours and physically demanding days, with visible results for patients.',v:[4,5,4,2,3,3,2,4,2,5,4,3,3,2]},
+    {id:'ortho',name:'Orthopaedics',tag:'Bones, joints and mechanics.',
+     day:'Fracture clinics, trauma OTs, joint replacements and sports injuries, with plenty of implants and imaging.',
+     real:'Physically demanding procedures and trauma on-call, with good prospects in private practice.',v:[4,5,4,3,3,2,2,5,2,5,3,3,4,2]},
+    {id:'anaes',name:'Anaesthesiology',tag:'The guardian of the operating theatre.',
+     day:'Pre-op checks, anaesthesia for surgeries, airway and haemodynamic control, with ICU and pain clinic work.',
+     real:'Calm control in high-stakes moments. Patient relationships are brief, and the scope includes critical care and pain.',v:[4,4,2,2,1,2,3,4,3,3,3,3,4,2]},
+    {id:'em',name:'Emergency Medicine',tag:'First on scene, first to decide.',
+     day:'Triage, resuscitation, trauma and medical emergencies, procedures and rapid decisions with incomplete information.',
+     real:'Shift work and nights with a high emotional load, and no long-term follow-up. Scope and infrastructure vary a lot between hospitals.',v:[5,4,4,2,1,3,1,3,1,4,5,3,4,4]},
+    {id:'resp',name:'Respiratory Medicine',tag:'Breath, lungs and the ventilator.',
+     day:'Chest OPD, TB, asthma and COPD clinics, bronchoscopy, lung function tests and ICU ventilator care.',
+     real:'A mix of long-term chronic disease care and critical care, with TB and pollution-related disease making public health a big part.',v:[3,3,4,3,4,3,3,3,2,3,4,4,3,4]},
+    {id:'radio',name:'Radiodiagnosis',tag:'See what others can’t.',
+     day:'Reading X-rays, CT, MRI and ultrasound, writing reports and discussing cases with clinicians, with interventional work in some centres.',
+     real:'Little patient contact and long screen hours. AI is changing workflows, which rewards radiologists who are comfortable with technology.',v:[3,2,1,5,1,1,4,5,5,1,1,3,5,2]},
+    {id:'radonc',name:'Radiation Oncology',tag:'Precision against cancer.',
+     day:'Planning radiation with imaging and physics teams, treating patients over weeks, and managing side-effects and palliative care.',
+     real:'Emotionally intense, with many serious diagnoses. Strong long-term patient relationships in a technology-driven field.',v:[2,2,4,4,4,4,4,3,2,2,5,4,5,3]},
+    {id:'psych',name:'Psychiatry',tag:'Medicine of the mind.',
+     day:'OPD consultations, inpatient wards, medication and therapy management, and liaison with other departments.',
+     real:'Time-intensive listening at a slower pace. Stigma and complex social factors are part of the work.',v:[2,1,5,1,5,5,4,3,3,1,4,3,2,4]},
+    {id:'derm',name:'Dermatology',tag:'Skin, hair, nails and confidence.',
+     day:'OPD-heavy practice, minor procedures, lasers and cosmetic work, with a lot of pattern recognition.',
+     real:'Predictable hours and strong private-practice scope, though seats are usually very competitive.',v:[2,3,4,5,4,3,5,5,3,1,1,2,3,2]},
+    {id:'ophth',name:'Ophthalmology',tag:'Precision microsurgery of the eye.',
+     day:'OPD, cataract and other eye surgeries, and retina and glaucoma clinics.',
+     real:'Fine procedural work with generally predictable hours, and a lot of time at the microscope.',v:[2,5,4,4,3,3,4,5,3,2,2,2,4,3]},
+    {id:'ent',name:'ENT (Otorhinolaryngology)',tag:'Ear, nose, throat and head-neck.',
+     day:'OPD with endoscopy, surgeries from tonsils to sinus and head-neck, plus occasional airway emergencies.',
+     real:'A balanced mix of clinic and surgery, with fewer life-or-death emergencies than some branches.',v:[3,5,4,3,3,3,3,4,2,3,2,2,3,2]},
+    {id:'path',name:'Pathology',tag:'The diagnosis behind every diagnosis.',
+     day:'Slides, frozen sections, reporting, lab coordination, haematology and blood bank.',
+     real:'Little patient contact and steady hours. Digital pathology and AI are growing fast.',v:[1,2,1,5,1,1,5,3,5,1,1,4,5,2]},
+    {id:'micro',name:'Microbiology',tag:'Hunting infections at their source.',
+     day:'Cultures, molecular tests, antibiotic susceptibility, infection control and teaching.',
+     real:'Mostly lab and academic work with limited private practice, but central to fighting antimicrobial resistance.',v:[1,1,1,3,1,1,5,1,4,1,1,5,4,4]},
+    {id:'comm',name:'Community Medicine',tag:'Health for whole populations.',
+     day:'Field programmes, epidemiology, surveillance, policy, teaching and outbreak response.',
+     real:'Regular hours and strong public-health impact, mostly in academic and government roles rather than private clinics.',v:[2,1,3,1,3,3,5,2,2,2,2,4,3,5]},
+    {id:'forensic',name:'Forensic Medicine',tag:'Medicine meets the law.',
+     day:'Autopsies, injury and age assessments, court testimony and medico-legal documentation.',
+     real:'Mostly regular hours, though court duties can be unpredictable. Limited private practice and some emotionally heavy cases.',v:[2,3,1,3,1,1,4,2,4,2,3,3,2,3]},
+    {id:'pmr',name:'Physical Medicine & Rehabilitation',tag:'Getting people back to function.',
+     day:'Rehab clinics, stroke and spinal injury care, pain management and prosthetics, working closely with therapists.',
+     real:'Slow, rewarding long-term care, with fewer seats and less awareness than mainstream branches.',v:[1,3,5,2,5,4,4,3,2,3,3,3,3,3]}
+  ];
+
+  var CHIPS = [
+    {id:'emerg',label:'Emergencies & resuscitation',p:['em'],s:['anaes']},
+    {id:'crit',label:'Critical care & ventilators',p:['resp'],s:['em','anaes','med']},
+    {id:'lungs',label:'Lungs & breathing',p:['resp']},
+    {id:'ot',label:'Operating theatre',p:['surg','ortho','obg','ent','ophth']},
+    {id:'trauma',label:'Trauma & general surgery',p:['surg'],s:['em','ortho']},
+    {id:'imaging',label:'Scans & imaging',p:['radio'],s:['radonc']},
+    {id:'cancer',label:'Cancer & radiation',p:['radonc'],s:['path','surg']},
+    {id:'kids',label:'Children & newborns',p:['paeds']},
+    {id:'women',label:'Pregnancy & women’s health',p:['obg']},
+    {id:'mind',label:'Mental health & the mind',p:['psych']},
+    {id:'skin',label:'Skin, hair & aesthetics',p:['derm']},
+    {id:'eyes',label:'Eyes & microsurgery',p:['ophth']},
+    {id:'ent',label:'Ear, nose & throat',p:['ent']},
+    {id:'bones',label:'Bones, joints & sports',p:['ortho'],s:['pmr']},
+    {id:'lab',label:'Microscope & lab diagnosis',p:['path','micro']},
+    {id:'infect',label:'Infections & antibiotics',p:['micro'],s:['med','resp']},
+    {id:'public',label:'Public health & policy',p:['comm']},
+    {id:'law',label:'Law & investigation',p:['forensic']},
+    {id:'rehab',label:'Rehab & recovery',p:['pmr'],s:['ortho']},
+    {id:'complex',label:'Complex cases & chronic disease',p:['med'],s:['resp']},
+    {id:'anaes',label:'Anaesthesia & pain relief',p:['anaes']},
+    {id:'tech',label:'Technology, data & AI',p:['radio'],s:['path','radonc']}
+  ];
+
+  var STEPS = [
+    {title:'You', sub:'How you think, work and connect. There are no right answers.'},
+    {title:'Your life', sub:'The kind of days and years you want to have.'},
+    {title:'What pulls you', sub:'Your curiosity and the impact you want to make.'}
+  ];
+
+  var QUESTIONS = [
+    {s:0,k:'pace',q:'I thrive when things are fast, urgent and high-stakes.',lo:'Not me',hi:'Totally me'},
+    {s:0,k:'hands',q:'I want to do procedures with my own hands.',lo:'I prefer thinking',hi:'Hands-on, always'},
+    {s:0,k:'people',q:'I want constant, direct contact with patients.',lo:'Less is better',hi:'The more the better'},
+    {s:0,k:'visual',q:'I enjoy spotting patterns in images, slides and reports.',lo:'Not really',hi:'I love it'},
+    {s:0,k:'continuity',q:'I like following the same patients for months or years.',lo:'I prefer one-off cases',hi:'Long relationships'},
+    {s:0,k:'empathy',q:'Listening and emotional connection give me energy.',lo:'Not really',hi:'Absolutely'},
+    {s:1,k:'hours',q:'Predictable hours and free weekends matter a lot to me.',lo:'I can live without',hi:'Non-negotiable'},
+    {s:1,k:'earning',q:'Strong earning potential is important to me.',lo:'Not a priority',hi:'Very important'},
+    {s:1,k:'solo',q:'I do my best work independently and quietly, not in a big team.',lo:'Team person',hi:'Independent worker'},
+    {s:1,k:'physical',q:'I can handle physically demanding days: long OT lists, nights, hours on my feet.',lo:'I’d rather not',hi:'Bring it on'},
+    {s:1,k:'emotional',q:'I can handle emotionally heavy work: critical illness, trauma and death.',lo:'I’d rather not',hi:'I can handle it'},
+    {s:2,k:'research',q:'Research, teaching and academics excite me.',lo:'Not for me',hi:'Very much'},
+    {s:2,k:'tech',q:'I love technology, data and AI in medicine.',lo:'Not really',hi:'I love it'},
+    {s:2,k:'public',q:'I care about impact on whole populations, not only individual patients.',lo:'Individuals first',hi:'The big picture'}
+  ];
+
+  var FITP = {
+    pace:{hi:'You like fast, high-stakes decisions, and this branch runs on them.',lo:'You prefer a calmer pace, and this branch is steadier.'},
+    hands:{hi:'You want to work with your hands, and procedures are central here.',lo:'You prefer thinking to procedures, and this branch is mostly cognitive.'},
+    people:{hi:'You want lots of patient contact, and this branch is built on it.',lo:'You prefer less direct patient contact, which suits this behind-the-scenes branch.'},
+    visual:{hi:'You enjoy pattern-spotting in images and slides, which is core to this work.',lo:null},
+    continuity:{hi:'You like following patients over time, and this branch gives you long relationships.',lo:'You prefer one-off encounters, and care here is mostly episodic.'},
+    empathy:{hi:'Listening and emotional connection energise you, and they are daily tools here.',lo:null},
+    hours:{hi:'Predictable hours matter to you, and this branch is kinder than most on that front.'},
+    earning:{hi:'Earning potential matters to you, and this branch is known for good prospects.'},
+    solo:{hi:'You like focused, independent work, which suits this branch.',lo:'You like working in a team, and this branch is collaborative.'},
+    physical:{hi:'You are fine with physically demanding days, which this branch asks for.'},
+    emotional:{hi:'You can handle emotional intensity, which this branch regularly brings.'},
+    research:{hi:'You would enjoy research and teaching, and there is plenty of scope here.'},
+    tech:{hi:'You like technology and data, and this branch is heavily tech-driven.',lo:null},
+    public:{hi:'You care about population-level impact, which is a big part of this branch.',lo:null}
+  };
+  var WATCHP = {
+    pace:{hi:'You like adrenaline, but this branch is much steadier than you may want.',lo:'This branch is fast and unpredictable, and you prefer a calmer pace.'},
+    hands:{hi:'You like working with your hands, but this branch has fewer procedures.',lo:'Procedures are central here, and you prefer less hands-on work.'},
+    people:{hi:'You want lots of patient contact, but this branch has little of it.',lo:'Patient contact is constant here, and you prefer less.'},
+    visual:{hi:'You like image and pattern work, but this branch uses less of it.',lo:'This work is heavily visual and pattern-based, which may not excite you.'},
+    continuity:{hi:'You like following patients over time, but here they are mostly one-off encounters.',lo:'This branch is long-term follow-up, and you prefer episodic care.'},
+    empathy:{hi:'You value emotional connection, but patient bonds are brief here.',lo:'Emotional connection is a big part of this branch.'},
+    hours:{hi:'You want predictable hours, but this branch is known for long, irregular ones.'},
+    earning:{hi:'You want strong earning potential, but this branch tends to be more modest.'},
+    solo:{hi:'You prefer working independently, but this branch is team-heavy.',lo:'You prefer teamwork, but this branch is more solitary.'},
+    physical:{lo:'This branch is physically demanding, and you would rather avoid that.'},
+    emotional:{lo:'Emotional intensity is high here (critical illness, death), and you would prefer lighter.'},
+    research:{hi:'You would love research, but opportunities are fewer in this branch.'},
+    tech:{hi:'You like technology and data, but this branch is less tech-driven.',lo:'This branch is very tech-driven, and you would rather it were not.'},
+    public:{hi:'You care about population-level impact, but this branch focuses on individual patients.',lo:'This branch is population-focused, and you prefer individual care.'}
+  };
+
+  var ARCH = {
+    frontline:['The Frontline Fixer','You run toward the emergency and fix things with your own hands.'],
+    adrenaline:['The Adrenaline Healer','You do your best thinking when the clock is loud.'],
+    pattern:['The Quiet Pattern-Seeker','You see what others miss, and you like to work in focus.'],
+    precision:['The Precision Maker','Steady hands and sharp focus: you want a visible difference.'],
+    longhaul:['The Long-Haul Healer','You build real relationships and stay for the whole journey.'],
+    architect:['The Curious Architect','You love ideas, data and building what comes next.'],
+    bigpic:['The Big-Picture Healer','You think in populations, systems and long-term change.'],
+    balanced:['The Balanced Strategist','You want a great career and a life outside it.'],
+    allround:['The Open-Minded All-Rounder','Several paths could suit you, so the details matter.']
+  };
+
+  /* ---------- ENGINE ---------- */
+  function fitRaw(a, b) {
+    var num = 0, den = 0;
+    for (var i = 0; i < DIMS.length; i++) {
+      var k = DIMS[i], u = a[k], v = b.v[i], t = TYPE[k], pen, w;
+      if (t === 'sym') { pen = Math.abs(u - v); w = 0.4 + 0.4 * Math.abs(u - 3); }
+      else if (t === 'need') { pen = Math.max(0, u - v); w = 1; }
+      else { pen = Math.max(0, v - u); w = 1; }
+      num += w * pen; den += w * 4;
+    }
+    return 1 - num / den;
+  }
+  var LO = 0.50, SPAN = 0.48;
+  function toPct(f) {
+    var t = Math.max(0, Math.min(1, (f - LO) / SPAN));
+    return Math.round(35 + 65 * Math.pow(t, 1.15));
+  }
+  function rank(a, chips) {
+    var bonus = {};
+    (chips || []).forEach(function (id) {
+      var c = CHIPS.filter(function (x) { return x.id === id; })[0];
+      if (!c) return;
+      (c.p || []).forEach(function (b) { bonus[b] = (bonus[b] || 0) + 0.07; });
+      (c.s || []).forEach(function (b) { bonus[b] = (bonus[b] || 0) + 0.03; });
+    });
+    return BRANCHES.map(function (b) {
+      var raw = fitRaw(a, b);
+      var f = Math.min(1, raw + Math.min(0.14, bonus[b.id] || 0));
+      return {b: b, raw: raw, f: f, pct: toPct(f)};
+    }).sort(function (x, y) { return y.f - x.f || y.raw - x.raw; });
+  }
+  function explain(a, b) {
+    var fits = [], watch = [];
+    DIMS.forEach(function (k, i) {
+      var u = a[k], v = b.v[i], t = TYPE[k], hi = u >= 4, lo = u <= 2;
+      if (t === 'sym') {
+        if (hi && v >= 4 && FITP[k].hi) fits.push([Math.abs(u - 3) + 0.1 * (2 - Math.abs(u - v)), FITP[k].hi]);
+        else if (lo && v <= 2 && FITP[k].lo) fits.push([Math.abs(u - 3) + 0.1 * (2 - Math.abs(u - v)), FITP[k].lo]);
+        if (hi && v <= u - 2 && WATCHP[k].hi) watch.push([(u - v) * (0.4 + 0.4 * Math.abs(u - 3)), WATCHP[k].hi]);
+        if (lo && v >= u + 2 && WATCHP[k].lo) watch.push([(v - u) * (0.4 + 0.4 * Math.abs(u - 3)), WATCHP[k].lo]);
+      } else if (t === 'need') {
+        if (hi && v >= 4 && FITP[k].hi) fits.push([u - 3, FITP[k].hi]);
+        if (hi && v <= u - 2 && WATCHP[k].hi) watch.push([u - v, WATCHP[k].hi]);
+      } else {
+        if (hi && v >= 4 && FITP[k].hi) fits.push([(u - 3) * 0.8, FITP[k].hi]);
+        if (lo && v >= u + 2 && WATCHP[k].lo) watch.push([v - u, WATCHP[k].lo]);
+      }
+    });
+    function top(arr, n) { return arr.sort(function (x, y) { return y[0] - x[0]; }).slice(0, n).map(function (x) { return x[1]; }); }
+    return {fits: top(fits, 3), watch: top(watch, 2)};
+  }
+  function archetype(a) {
+    if (a.pace >= 4 && a.hands >= 4) return ARCH.frontline;
+    if (a.pace >= 4) return ARCH.adrenaline;
+    if (a.visual >= 4 && a.solo >= 4) return ARCH.pattern;
+    if (a.hands >= 4) return ARCH.precision;
+    if (a.people >= 4 && a.continuity >= 4 && a.empathy >= 4) return ARCH.longhaul;
+    if (a.research >= 4 && a.tech >= 4) return ARCH.architect;
+    if (a.public >= 4) return ARCH.bigpic;
+    if (a.hours >= 4) return ARCH.balanced;
+    return ARCH.allround;
+  }
+
+  /* ---------- UI STATE ---------- */
+  var answers = {}, chips = {}, step = 0, lastRanked = null, lastArch = null;
+  var $ = function (id) { return document.getElementById(id); };
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function show(id) {
+    ['intro', 'quiz', 'results'].forEach(function (s) { $(s).classList.toggle('active', s === id); });
+    window.scrollTo({top: 0, behavior: 'auto'});
+  }
+  function toast(msg) {
+    var t = $('toast'); t.textContent = msg; t.classList.add('show');
+    clearTimeout(toast._t); toast._t = setTimeout(function () { t.classList.remove('show'); }, 2200);
+  }
+
+  // intro cloud of branches
+  (function () {
+    var must = {em: 1, resp: 1, radonc: 1};
+    $('cloud').innerHTML = BRANCHES.map(function (b) {
+      return '<span' + (must[b.id] ? ' class="hl"' : '') + '>' + b.name + '</span>';
+    }).join('');
+  })();
+
+  function renderStep() {
+    var s = STEPS[step];
+    $('progBar').style.width = ((step + 1) / 3 * 100) + '%';
+    $('progTxt').textContent = 'STEP ' + (step + 1) + ' OF 3';
+    $('stepTitle').textContent = s.title;
+    $('stepSub').textContent = s.sub;
+    $('qlist').innerHTML = QUESTIONS.filter(function (q) { return q.s === step; }).map(function (q) {
+      var btns = [1, 2, 3, 4, 5].map(function (n) {
+        return '<button type="button" role="radio" aria-checked="' + (answers[q.k] === n) + '" aria-label="' + n + ' of 5" data-k="' + q.k + '" data-v="' + n + '">' + n + '</button>';
+      }).join('');
+      return '<div class="q" data-q="' + q.k + '"><p class="qtext" id="t_' + q.k + '">' + q.q + '</p>' +
+        '<div class="scale" role="radiogroup" aria-labelledby="t_' + q.k + '">' + btns + '</div>' +
+        '<div class="ends"><span>' + q.lo + '</span><span>' + q.hi + '</span></div></div>';
+    }).join('');
+    var showChips = step === 2;
+    $('chipsBlock').hidden = !showChips;
+    if (showChips) {
+      $('chips').innerHTML = CHIPS.map(function (c) {
+        return '<button type="button" aria-pressed="' + !!chips[c.id] + '" data-c="' + c.id + '">' + c.label + '</button>';
+      }).join('');
+    }
+    $('backBtn').textContent = step === 0 ? 'Back' : 'Back';
+    $('nextBtn').textContent = step === 2 ? 'Show my match' : 'Next';
+    updateNext();
+  }
+  function remaining() {
+    return QUESTIONS.filter(function (q) { return q.s === step && !answers[q.k]; });
+  }
+  function updateNext() {
+    var left = remaining().length;
+    $('nextBtn').disabled = left > 0;
+    $('hint').textContent = left > 0 ? (left === 1 ? '1 question left on this page' : left + ' questions left on this page') : '';
+  }
+
+  $('startBtn').addEventListener('click', function () { step = 0; renderStep(); show('quiz'); });
+  $('backBtn').addEventListener('click', function () {
+    if (step === 0) { show('intro'); } else { step--; renderStep(); window.scrollTo({top: 0, behavior: 'auto'}); }
+  });
+  $('nextBtn').addEventListener('click', function () {
+    if (remaining().length) return;
+    if (step < 2) { step++; renderStep(); window.scrollTo({top: 0, behavior: 'auto'}); }
+    else { showResults(); }
+  });
+  $('qlist').addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-k]'); if (!b) return;
+    var k = b.getAttribute('data-k');
+    answers[k] = parseInt(b.getAttribute('data-v'), 10);
+    var group = b.parentNode.querySelectorAll('button');
+    for (var i = 0; i < group.length; i++) group[i].setAttribute('aria-checked', group[i] === b ? 'true' : 'false');
+    updateNext();
+    var rem = remaining();
+    if (rem.length) {
+      var el = document.querySelector('[data-q="' + rem[0].k + '"]');
+      if (el) setTimeout(function () { el.scrollIntoView({block: 'center', behavior: reduce ? 'auto' : 'smooth'}); }, 160);
+    }
+  });
+  $('chips').addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-c]'); if (!b) return;
+    var id = b.getAttribute('data-c');
+    chips[id] = !chips[id];
+    b.setAttribute('aria-pressed', String(!!chips[id]));
+  });
+
+  /* ---------- RESULTS ---------- */
+  function list(items) { return '<ul>' + items.map(function (t) { return '<li>' + t + '</li>'; }).join('') + '</ul>'; }
+  function detail(r, full) {
+    var ex = explain(answers, r.b);
+    var fits = ex.fits.length ? ex.fits : ['Your answers line up closely with how this branch really works.'];
+    var watch = ex.watch.length ? ex.watch : ['No big red flags in your answers. Still talk to residents in this branch.'];
+    var html = '<div class="sec"><h4>Why it fits you</h4>' + list(fits) + '</div>' +
+               '<div class="sec watch"><h4>Watch-outs</h4>' + list(watch) + '</div>';
+    if (full) {
+      html += '<div class="sec"><h4>A typical day</h4><p>' + r.b.day + '</p></div>' +
+              '<div class="sec"><h4>Reality check</h4><p>' + r.b.real + '</p></div>';
+    }
+    return html;
+  }
+  function showResults() {
+    var ranked = rank(answers, Object.keys(chips).filter(function (k) { return chips[k]; }));
+    var arch = archetype(answers);
+    lastRanked = ranked; lastArch = arch;
+    var t = ranked[0], r2 = ranked[1], r3 = ranked[2];
+    var h = '';
+    h += '<div class="arch"><p class="eyebrow">You are</p><h2 class="grad">' + arch[0] + '</h2><p>' + arch[1] + '</p></div>';
+    h += '<div class="top1"><p class="eyebrow" style="margin-bottom:16px">Your top match</p>' +
+         '<div class="head"><div class="ring"><svg viewBox="0 0 120 120"><circle class="bg" cx="60" cy="60" r="50"/><circle class="fg" id="ringFg" cx="60" cy="60" r="50"/></svg><b>' + t.pct + '%</b></div>' +
+         '<div><h3>' + t.b.name + '</h3><p class="vibe">' + t.b.tag + '</p></div></div>' + detail(t, true) + '</div>';
+    h += '<div class="runners"><p class="eyebrow">Also a strong fit</p>' + [r2, r3].map(function (r) {
+      return '<div class="runner"><div class="rh"><h3>' + r.b.name + '</h3><span class="pc">' + r.pct + '%</span></div><p class="vibe">' + r.b.tag + '</p>' + detail(r, false) + '</div>';
+    }).join('') + '</div>';
+    h += '<div class="all"><h4>All 19 branches</h4><p>Tap any branch to see why it fits, or not.</p>' + ranked.map(function (r, i) {
+      return '<details><summary><span class="rk">' + (i + 1) + '</span><span class="nm">' + r.b.name + '</span><span class="pc2">' + r.pct + '%</span>' +
+             '<span class="mini"><i data-w="' + r.pct + '"></i></span></summary><div class="detail"><p class="vibe" style="margin-bottom:6px">' + r.b.tag + '</p>' + detail(r, true) + '</div></details>';
+    }).join('') + '</div>';
+    h += '<div class="actions"><button class="btn primary" id="saveBtn">Save my result card</button><button class="btn ghost" id="copyBtn">Copy my result</button><button class="btn ghost" id="retakeBtn">Retake</button></div>';
+    h += '<p class="note">Match % shows how closely a branch fits your answers. It is not a prediction of your rank, seat or success.</p>';
+    $('results').innerHTML = h;
+    show('results');
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        var fg = $('ringFg'); if (fg) fg.style.strokeDashoffset = String(314 - 314 * (t.pct / 100));
+        var minis = document.querySelectorAll('.mini i');
+        for (var i = 0; i < minis.length; i++) minis[i].style.width = minis[i].getAttribute('data-w') + '%';
+      });
+    });
+    $('retakeBtn').addEventListener('click', function () { answers = {}; chips = {}; step = 0; show('intro'); });
+    $('copyBtn').addEventListener('click', copyResult);
+    $('saveBtn').addEventListener('click', saveCard);
+  }
+
+  function resultText() {
+    var r = lastRanked;
+    return 'My PG Polaris result (by nubicor.ai)\n' +
+      'I’m "' + lastArch[0] + '"\n' +
+      '1. ' + r[0].b.name + ' - ' + r[0].pct + '%\n' +
+      '2. ' + r[1].b.name + ' - ' + r[1].pct + '%\n' +
+      '3. ' + r[2].b.name + ' - ' + r[2].pct + '%\n' +
+      'Find your north star among 19 PG branches: ' + location.href.split('#')[0];
+  }
+  function copyResult() {
+    var text = resultText();
+    function fallback() {
+      var ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); toast('Result copied'); } catch (e) { toast('Could not copy. Please copy manually.'); }
+      document.body.removeChild(ta);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () { toast('Result copied'); }, fallback);
+    } else { fallback(); }
+  }
+
+  /* ---------- SHARE CARD (canvas) ---------- */
+  var FONT = 'Poppins, "Segoe UI", system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif';
+  function glow(g, x, y, r, col) {
+    var rg = g.createRadialGradient(x, y, 0, x, y, r);
+    rg.addColorStop(0, col); rg.addColorStop(1, 'rgba(0,0,0,0)');
+    g.fillStyle = rg; g.fillRect(x - r, y - r, r * 2, r * 2);
+  }
+  function drawLogo(g, x, y, s) {
+    g.save(); g.translate(x, y); g.scale(s, s); g.lineCap = 'round'; g.lineJoin = 'round';
+    g.strokeStyle = '#c9b6f2'; g.lineWidth = 5;
+    g.stroke(new Path2D('M45 85 C20 85 15 55 40 50 C42 28 75 20 88 40 C108 30 130 45 122 65 C140 68 138 85 118 85 Z'));
+    g.strokeStyle = '#f6b09e'; g.lineWidth = 4.4;
+    g.stroke(new Path2D('M62 62 H72 L78 48 L86 74 L92 62 H102'));
+    g.strokeStyle = '#e6dcff'; g.lineWidth = 3.4;
+    g.stroke(new Path2D('M118 22 A22 22 0 0 1 140 44'));
+    g.globalAlpha = 0.55; g.stroke(new Path2D('M118 10 A34 34 0 0 1 152 44'));
+    g.restore();
+  }
+  function fitFont(g, text, weight, start, maxW) {
+    var s = start;
+    while (s > 20) { g.font = weight + ' ' + s + 'px ' + FONT; if (g.measureText(text).width <= maxW) break; s -= 2; }
+    return s;
+  }
+  function spaced(g, text, x, y, sp) {
+    for (var i = 0; i < text.length; i++) { g.fillText(text[i], x, y); x += g.measureText(text[i]).width + sp; }
+  }
+  function buildCard(ranked, arch) {
+    var W = 1080, H = 1350, PAD = 110;
+    var c = document.createElement('canvas'); c.width = W; c.height = H;
+    var g = c.getContext('2d');
+    var bg = g.createLinearGradient(0, 0, W * 0.6, H);
+    bg.addColorStop(0, '#3a2560'); bg.addColorStop(0.5, '#241640'); bg.addColorStop(1, '#150c28');
+    g.fillStyle = bg; g.fillRect(0, 0, W, H);
+    glow(g, 860, 300, 340, 'rgba(140,110,200,.34)');
+    glow(g, 190, 1040, 300, 'rgba(246,176,158,.16)');
+    g.fillStyle = 'rgba(244,238,255,.55)';
+    [[150, 210, 2.2], [330, 170, 1.8], [900, 240, 2.4], [960, 430, 1.8], [130, 520, 2], [880, 1010, 2.2], [210, 1070, 1.8]].forEach(function (p) {
+      g.beginPath(); g.arc(p[0], p[1], p[2], 0, 6.2832); g.fill();
+    });
+    // header (centred)
+    g.textBaseline = 'alphabetic';
+    g.font = '700 42px ' + FONT; var tw = g.measureText('PG Polaris').width;
+    var gw = 100 + 20 + tw, x0 = (W - gw) / 2;
+    drawLogo(g, x0, 92, 0.62);
+    g.fillStyle = '#f6f1fc'; g.font = '700 42px ' + FONT; g.fillText('PG Polaris', x0 + 120, 128);
+    g.fillStyle = '#f6b09e'; g.font = '500 24px ' + FONT; spaced(g, 'by nubicor.ai', x0 + 120, 164, 3);
+    // tag + archetype
+    g.fillStyle = '#f6b09e'; g.font = '500 27px ' + FONT; spaced(g, 'MY PG MATCH', PAD, 330, 7);
+    var as = fitFont(g, arch[0], 700, 76, W - 2 * PAD);
+    var ag = g.createLinearGradient(PAD, 0, W - PAD, 0); ag.addColorStop(0, '#d9c9ff'); ag.addColorStop(1, '#f6b09e');
+    g.fillStyle = ag; g.font = '700 ' + as + 'px ' + FONT; g.fillText(arch[0], PAD, 430);
+    g.fillStyle = '#bdb1dc'; g.font = '400 32px ' + FONT;
+    var words = arch[1].split(' '), line = '', y = 490;
+    words.forEach(function (w) {
+      var t = (line + ' ' + w).trim();
+      if (g.measureText(t).width > W - 2 * PAD) { g.fillText(line, PAD, y); y += 44; line = w; } else { line = t; }
+    });
+    if (line) g.fillText(line, PAD, y);
+    // top 3
+    var rows = ranked.slice(0, 3), ry = 690;
+    rows.forEach(function (r, i) {
+      g.fillStyle = i === 0 ? '#f6b09e' : '#bfb1ea'; g.font = '700 40px ' + FONT; g.fillText(String(i + 1), PAD, ry);
+      var pct = r.pct + '%';
+      g.font = '700 52px ' + FONT; var pw = g.measureText(pct).width;
+      var ns = fitFont(g, r.b.name, 700, 50, W - 2 * PAD - 70 - pw - 30);
+      g.fillStyle = '#f6f1fc'; g.font = '700 ' + ns + 'px ' + FONT; g.fillText(r.b.name, PAD + 70, ry);
+      g.fillStyle = i === 0 ? '#f6b09e' : '#bfb1ea'; g.font = '700 52px ' + FONT; g.fillText(pct, W - PAD - pw, ry);
+      var by = ry + 26;
+      g.fillStyle = 'rgba(255,255,255,.10)'; g.beginPath(); g.roundRect(PAD + 70, by, W - 2 * PAD - 70, 14, 7); g.fill();
+      g.fillStyle = i === 0 ? '#f6b09e' : '#bfb1ea'; g.beginPath(); g.roundRect(PAD + 70, by, (W - 2 * PAD - 70) * (r.pct / 100), 14, 7); g.fill();
+      ry += 150;
+    });
+    // footer (raised from the bottom edge)
+    g.fillStyle = '#8d81b0'; g.font = '400 26px ' + FONT; g.fillText('Find your north star among 19 PG branches', PAD, 1192);
+    g.fillStyle = '#bfb1ea'; g.font = '500 26px ' + FONT; var f2 = 'nubicor.ai'; g.fillText(f2, W - PAD - g.measureText(f2).width, 1192);
+    return c;
+  }
+  function saveCard() {
+    try {
+      var c = buildCard(lastRanked, lastArch);
+      c.toBlob(function (blob) {
+        if (!blob) { toast('Could not make the image'); return; }
+        var file = null;
+        try { file = new File([blob], 'my-pg-polaris-result.png', {type: 'image/png'}); } catch (e) {}
+        if (file && navigator.canShare && navigator.canShare({files: [file]}) && navigator.share) {
+          navigator.share({files: [file], title: 'My PG Polaris result'}).catch(function () {});
+          return;
+        }
+        var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'my-pg-polaris-result.png';
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        setTimeout(function () { URL.revokeObjectURL(a.href); }, 1500);
+        toast('Result card saved');
+      }, 'image/png');
+    } catch (e) { toast('Could not make the image'); }
+  }
+
+  /* test hook (harmless in production) */
+  window.PGP = {BRANCHES: BRANCHES, CHIPS: CHIPS, DIMS: DIMS, QUESTIONS: QUESTIONS, rank: rank, explain: explain, archetype: archetype, buildCard: buildCard};
+})();
+</script>
+</body>
+</html>
